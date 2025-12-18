@@ -2,11 +2,11 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>quick_popup_manager – Flutter popup toolkit</title>
+  <title>quick_popup_manager – Global Flutter Popup System</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta
     name="description"
-    content="quick_popup_manager is a Flutter package that provides simple, reusable snackbars, dialogs, and bottom sheets with shared styling and flexible content."
+    content="A powerful, global popup system for Flutter that works without BuildContext. Supports Toasts, Snackbars, Banners, Dialogs, and Bottom Sheets with comprehensive customization, animations, and framework-agnostic design."
   />
   <style>
     :root {
@@ -19,6 +19,10 @@
       --card-bg: rgba(15, 23, 42, 0.9);
       --border: rgba(148, 163, 184, 0.35);
       --radius-lg: 18px;
+      --success: #10b981;
+      --error: #ef4444;
+      --warning: #f59e0b;
+      --info: #3b82f6;
     }
 
     * {
@@ -45,7 +49,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      max-width: 1024px;
+      max-width: 1200px;
       margin: 0 auto;
       width: 100%;
     }
@@ -56,6 +60,7 @@
       display: flex;
       align-items: center;
       gap: 8px;
+      font-size: 1.1rem;
     }
 
     .logo-mark {
@@ -76,12 +81,12 @@
     }
 
     .hero-inner {
-      max-width: 1024px;
+      max-width: 1200px;
       width: 100%;
       display: grid;
       grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
       gap: 40px;
-      align-items: center;
+      align-items: start;
     }
 
     @media (max-width: 800px) {
@@ -109,9 +114,9 @@
 
     .hero-subtitle {
       color: var(--muted);
-      font-size: 0.98rem;
-      max-width: 34rem;
-      line-height: 1.6;
+      font-size: 1rem;
+      max-width: 36rem;
+      line-height: 1.7;
       margin-bottom: 24px;
     }
 
@@ -119,7 +124,7 @@
       display: flex;
       flex-wrap: wrap;
       gap: 12px;
-      margin-bottom: 18px;
+      margin-bottom: 24px;
     }
 
     .btn {
@@ -161,9 +166,29 @@
       border-color: rgba(148, 163, 184, 0.8);
     }
 
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 12px;
+      margin: 24px 0;
+    }
+
+    .feature-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      border-radius: 8px;
+      background: var(--accent-soft);
+      border: 1px solid rgba(129, 140, 248, 0.3);
+      font-size: 0.85rem;
+      color: #c7d2fe;
+    }
+
     .hero-meta {
-      font-size: 0.82rem;
+      font-size: 0.88rem;
       color: var(--muted);
+      line-height: 1.6;
     }
 
     .hero-meta strong {
@@ -178,6 +203,7 @@
       box-shadow: 0 22px 45px rgba(15, 23, 42, 0.95);
       position: relative;
       overflow: hidden;
+      margin-bottom: 16px;
     }
 
     .card::before {
@@ -209,6 +235,18 @@
       border: 1px solid rgba(129, 140, 248, 0.5);
     }
 
+    .chip-success {
+      background: rgba(16, 185, 129, 0.15);
+      color: #6ee7b7;
+      border-color: rgba(16, 185, 129, 0.4);
+    }
+
+    .chip-error {
+      background: rgba(239, 68, 68, 0.15);
+      color: #fca5a5;
+      border-color: rgba(239, 68, 68, 0.4);
+    }
+
     .card-title {
       font-size: 0.92rem;
       color: #e5e7eb;
@@ -218,7 +256,7 @@
     .code-block {
       font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
         "Liberation Mono", "Courier New", monospace;
-      font-size: 0.8rem;
+      font-size: 0.75rem;
       background: rgba(15, 23, 42, 0.9);
       border-radius: 12px;
       border: 1px solid rgba(30, 64, 175, 0.8);
@@ -227,6 +265,7 @@
       overflow-x: auto;
       position: relative;
       z-index: 1;
+      margin: 10px 0;
     }
 
     .code-block pre {
@@ -238,6 +277,23 @@
       font-size: 0.82rem;
       color: var(--muted);
       margin-top: 10px;
+      line-height: 1.6;
+    }
+
+    .popup-types {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 8px;
+      margin: 16px 0;
+    }
+
+    .popup-type-item {
+      padding: 8px 12px;
+      border-radius: 8px;
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid rgba(148, 163, 184, 0.2);
+      font-size: 0.85rem;
+      text-align: center;
     }
 
     footer {
@@ -245,6 +301,9 @@
       font-size: 0.78rem;
       color: var(--muted);
       text-align: center;
+      max-width: 1200px;
+      margin: 0 auto;
+      width: 100%;
     }
 
     footer a {
@@ -254,6 +313,13 @@
 
     footer a:hover {
       text-decoration: underline;
+    }
+
+    .highlight {
+      background: rgba(99, 102, 241, 0.15);
+      padding: 2px 6px;
+      border-radius: 4px;
+      color: #c7d2fe;
     }
   </style>
 </head>
@@ -270,127 +336,158 @@
       <div class="hero-inner">
         <section>
           <h1 class="hero-title">
-            Simple, reusable <span>Flutter popups</span>
+            Global <span>Flutter Popup System</span><br />
+            <span style="font-size: 0.7em;">No BuildContext Required</span>
           </h1>
           <p class="hero-subtitle">
-            <strong>quick_popup_manager</strong> gives you a small, focused toolkit
-            for building snackbars, dialogs, and bottom sheets with shared styling
-            and flexible content. Keep your popup logic consistent across your app
-            without fighting the framework.
+            <strong>quick_popup_manager</strong> is a powerful, comprehensive Flutter package 
+            that provides a unified, global popup system. Show <span class="highlight">Toasts</span>, 
+            <span class="highlight">Snackbars</span>, <span class="highlight">Banners</span>, 
+            <span class="highlight">Dialogs</span>, and <span class="highlight">Bottom Sheets</span> 
+            from anywhere in your app—services, controllers, background callbacks, Firebase handlers—without needing BuildContext.
           </p>
 
+          <div class="features-grid">
+            <div class="feature-badge">🌍 No BuildContext</div>
+            <div class="feature-badge">🎨 Fully Customizable</div>
+            <div class="feature-badge">🎭 Rich Animations</div>
+            <div class="feature-badge">🔌 Framework-Agnostic</div>
+            <div class="feature-badge">⚡ Lightweight</div>
+            <div class="feature-badge">🎯 Type-Safe</div>
+          </div>
+
           <div class="hero-actions">
-            <!-- Replace href with your actual pub.dev URL -->
             <a
               class="btn btn-primary"
               href="https://pub.dev/packages/quick_popup_manager"
               target="_blank"
               rel="noopener noreferrer"
             >
-              View on pub.dev
+              📦 View on pub.dev
             </a>
-            <!-- Replace href with your public repo/website if available -->
-            <a
-              class="btn btn-ghost"
-              href="#features"
-            >
-              View features
-            </a>
+<!--            <a-->
+<!--              class="btn btn-ghost"-->
+<!--              href="https://github.com/greelogix/quick_popup_manager"-->
+<!--              target="_blank"-->
+<!--              rel="noopener noreferrer"-->
+<!--            >-->
+<!--              🔗 GitHub-->
+<!--            </a>-->
           </div>
 
           <p class="hero-meta">
-            <strong>Key idea:</strong> one widget (`PopupWidget`) and one style
-            (`PopupStyle`) to drive snackbars, dialogs, and bottom sheets—
-            including fully custom content like selection lists.
+            <strong>Perfect for:</strong> API responses, payment status, push notifications, 
+            background tasks, and any scenario where you need to show popups without BuildContext. 
+            Works seamlessly with GetX, Bloc, Provider, Riverpod, and vanilla Flutter.
           </p>
         </section>
 
         <aside>
           <div class="card" id="features">
             <div class="card-header">
-              <span class="card-title">Quick overview</span>
-              <span class="chip">Flutter package</span>
+              <span class="card-title">🚀 Quick Start</span>
+              <span class="chip">v0.0.1</span>
             </div>
 
             <div class="tagline">
-              Unified API for:
-              <br />
-              – Snackbars (custom content)
-              <br />
-              – Alert dialogs
-              <br />
-              – Bottom sheets (including lists & selections)
+              <strong>1. Add to MaterialApp:</strong>
             </div>
 
-            <div style="height: 10px;"></div>
+            <div class="code-block">
+              <pre><code>MaterialApp(
+  navigatorObservers: [
+    QuickPopupNavigatorObserver()
+  ],
+  // ...
+)</code></pre>
+            </div>
+
+            <div class="tagline">
+              <strong>2. Use anywhere (no BuildContext!):</strong>
+            </div>
 
             <div class="code-block">
-              <pre><code>// Dialog popup
-showDialog(
-  context: context,
-  builder: (_) =&gt; PopupWidget(
-    type: PopupType.dialog,
-    title: "Dialog Popup",
-    message: "Current counter: 5",
-    style: const PopupStyle(
-      backgroundColor: Colors.white,
-      titleStyle: TextStyle(
-        fontSize: 20,
-        fontWeight: FontWeight.bold,
-        color: Colors.blue,
-      ),
-      messageStyle: TextStyle(
-        fontSize: 16,
-        color: Colors.black87,
-      ),
-    ),
-    onConfirm: () =&gt; Navigator.of(context).pop(),
-    onCancel: () =&gt; Navigator.of(context).pop(),
+              <pre><code>// Toast
+QuickPopupManager()
+  .showSuccessToast(
+    message: 'Success!',
+    position: PopupPosition.top,
+  );
+
+// Dialog
+QuickPopupManager()
+  .showDialogPopup(
+    title: 'Confirm',
+    message: 'Are you sure?',
+    onConfirm: () {},
+  );
+
+// Bottom Sheet
+QuickPopupManager()
+  .showBottomSheet(
+    title: 'Options',
+    content: YourWidget(),
+  );</code></pre>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <span class="card-title">📱 Popup Types</span>
+              <span class="chip chip-success">5 Types</span>
+            </div>
+
+            <div class="popup-types">
+              <div class="popup-type-item">🍞 Toast</div>
+              <div class="popup-type-item">🍔 Snackbar</div>
+              <div class="popup-type-item">🚩 Banner</div>
+              <div class="popup-type-item">💬 Dialog</div>
+              <div class="popup-type-item">📄 Bottom Sheet</div>
+            </div>
+
+            <div class="tagline">
+              All with comprehensive customization: colors, borders, text styles, 
+              buttons, spacing, animations, and more!
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <span class="card-title">🎨 Customization Example</span>
+              <span class="chip">A to Z</span>
+            </div>
+
+            <div class="code-block">
+              <pre><code>PopupStyle(
+  backgroundColor: Colors.purple.shade100,
+  borderRadius: 20,
+  borderWidth: 2,
+  borderColor: Colors.purple,
+  titleStyle: TextStyle(
+    color: Colors.purple.shade900,
+    fontSize: 24,
+    fontWeight: FontWeight.bold,
   ),
-);</code></pre>
+  confirmButtonColor: Colors.purple,
+  confirmButtonTextColor: Colors.white,
+  confirmButtonBorderRadius: 10,
+  padding: EdgeInsets.all(24),
+  elevation: 12,
+  // ... and 50+ more properties!
+)</code></pre>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <span class="card-title">🎭 Animations</span>
+              <span class="chip chip-error">6 Types</span>
             </div>
 
-            <div style="height: 10px;"></div>
-
-            <div class="code-block">
-              <pre><code>// Bottom sheet with selection list
-showModalBottomSheet(
-  context: context,
-  builder: (_) {
-    final options = ["Option A", "Option B", "Option C"];
-    int selectedIndex = 0;
-
-    return StatefulBuilder(
-      builder: (context, setState) {
-        return PopupWidget(
-          type: PopupType.bottomSheet,
-          title: "Choose an option",
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              for (int i = 0; i &lt; options.length; i++)
-                RadioListTile&lt;int&gt;(
-                  title: Text(options[i]),
-                  value: i,
-                  groupValue: selectedIndex,
-                  onChanged: (value) {
-                    if (value == null) return;
-                    setState(() {
-                      selectedIndex = value;
-                    });
-                  },
-                ),
-            ],
-          ),
-          onConfirm: () {
-            Navigator.of(context).pop(options[selectedIndex]);
-          },
-          onCancel: () =&gt; Navigator.of(context).pop(),
-        );
-      },
-    );
-  },
-);</code></pre>
+            <div class="tagline">
+              Fade • Slide (Top/Bottom/Left/Right) • Scale • Spring
+              <br />
+              All with custom curves and durations!
             </div>
           </div>
         </aside>
@@ -398,9 +495,11 @@ showModalBottomSheet(
     </main>
 
     <footer>
-      Built for Flutter apps that need a simple, consistent popup story.
+      Built with ❤️ for the Flutter community
       <br />
-      Replace links and content here with your own branding as needed.
+      <a href="https://pub.dev/packages/quick_popup_manager" target="_blank">pub.dev</a> • 
+<!--      <a href="https://github.com/greelogix/quick_popup_manager" target="_blank">GitHub</a> • -->
+      MIT License
     </footer>
   </div>
 </body>
